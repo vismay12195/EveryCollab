@@ -1,0 +1,78 @@
+/* Adding the styling for the container and form */
+
+.container {
+    min-height: 100vh;
+    height: 100%;
+    width: 100%;
+    background-image: linear-gradient(325deg, #A2D5F2 50%, #FF7E67 90%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.form {
+    min-width: 30%;
+    width: fit-content;
+    margin: 5% 0;
+    box-shadow: 1px 1px 5px #07689F;
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 15px;
+}
+
+.backToHome {
+    margin-bottom: -5%;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #07689F;
+    position: absolute;
+    left: 35%;
+    top: 10%;
+}
+
+.heading {
+    color: #07689F;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 1%;
+}
+
+.form button {
+    border: none;
+    outline: none;
+    color: #FAFAFA;
+    border-radius: 5px;
+    background-color: #07689F;
+    padding: 10px 10px;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.form button:hover {
+    background-color: #FF7E67;
+}
+
+/* Error message styling */
+
+.form .error {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #FF1E00;
+    letter-spacing: 1px;
+}
+
+.form .bottom p {
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.form .bottom a {
+    color: #FF7E67;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: underline;
+    cursor: pointer;
+}
