@@ -13,7 +13,8 @@ function Authenticate(props) {
             <form className={styles.form}>
                 <p className={styles.heading}>{checkSignUp ? "Signup" : "Login"}</p>
 
-                <InputControl />
+                <InputControl label={"Username"} />
+                <InputControl label={"Password"} isPassword />
             </form>
         </div>
     );

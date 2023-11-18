@@ -11,13 +11,14 @@
 }
 
 .container input {
+    width: 100%;
     border: 1px solid #252525;
     border-radius: 5px;
     outline: none;
     padding: 8px 10px;
-    margin: 0 2%;
     font-size: 1rem;
     transition: 200ms;
+    padding-right: 25px;
 }
 
 .container input:hover {
@@ -26,4 +27,33 @@
 
 .container input:focus {
     border-color: #07689F;
+}
+
+/* Styles for the inputContainer */
+.inputContainer {
+    position: relative;
+}
+
+.inputContainer:hover .icon svg {
+    color: #FAFAFA;
+}
+
+.inputContainer:focus-within .icon svg {
+    color: #07689F;
+}
+
+.inputContainer .icon {
+    position: absolute;
+    top: 50%;
+    right: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translateY(-50%);
+}
+
+.inputContainer .icon svg {
+    height: 15px;
+    width: 15px;
+    color: #07689F;
 }
