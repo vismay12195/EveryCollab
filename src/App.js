@@ -1,14 +1,17 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
 import Home from './Components/Home';
+import Authenticate from './Components/Authenticate/Authenticate';
+
 function App() {
   return (
     <div className="App">
       <Router>
         <Routes>
-          <Route path='/login' element={<h1>Login</h1>} />
-          <Route path='/signup' element={<h1>Sign Up</h1>} />
+          <Route path='/login' element={<Authenticate />} />
+          <Route path='/signup' element={<Authenticate />} />
           <Route path='/account' element={<h1>Account</h1>} />
           <Route path='/' element={<Home />} />
         </Routes>

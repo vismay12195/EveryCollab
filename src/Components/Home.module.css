@@ -48,6 +48,7 @@
     display: flex;
     gap: 5px;
     align-items: center;
+    transition: 200ms;
 }
 
 .left button:hover {

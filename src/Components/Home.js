@@ -9,7 +9,7 @@ const Home = () => {
     const navigateTo = useNavigate();
 
     const redirectOnClick = () => {
-        navigateTo("/login");
+        navigateTo('/login');
     }
     return (
         <div className={styles.container}>
@@ -17,7 +17,7 @@ const Home = () => {
                 <div className={styles.left}>
                     <p className={styles.heading}>EveryCollab</p>
                     <p className={styles.subheading}>A place that gives you complete control over your projects.</p>
-                    <button onClick={redirectOnClick()}>Get Started <ArrowRight /></button>
+                    <button onClick={redirectOnClick}>Get Started <ArrowRight /></button>
                 </div>
                 <div className={styles.right}>
                     <img src={HomeIcon} alt='Homepage img' />
