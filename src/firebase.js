@@ -1,7 +1,7 @@
 // Import the functions of Firebase SDK
 import { initializeApp } from "firebase/app";
 import { getAuth } from 'firebase/auth';
-import { doc, getFirestore, setDoc } from 'firebase/firestore'
+import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore'
 
 const firebaseConfig = {
     apiKey: "AIzaSyDehwb1NUpsKE_I9o1t2YHZK2fxz1Kbn_w",
@@ -33,4 +33,15 @@ const updateUserDatabase = async (user, uid) => {
     await setDoc(docRef, { ...user });
 }
 
-export { app as default, auth, db, updateUserDatabase };
+// Function to get the user data from the database collection
+const getUserFromDatabase = async (uid) => {
+    const docRef = doc(db, "users", uid);
+    const result = await getDoc(docRef);
+    // First checking whether the data for particular uid "exists()" in the database &
+    // Secondly if the data exists the getting that data from the database using "data()"
+    if (!result.exists()) return null;
+    return result.data();
+}
+
+
+export { app as default, auth, db, updateUserDatabase, getUserFromDatabase };

@@ -1,11 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import Home from './Components/Home';
 import Authenticate from './Components/Authenticate/Authenticate';
+import { auth, getUserFromDatabase } from './firebase';
 
 function App() {
+  // Checking whether the user has logged in
+  const [loginAuthenticated, setLoginAuthenticated] = useState(false);
+
+  // Fetching the details of user from the users Firestore database
+  const [userDetails, setUserDetails] = useState({});
+
+  // Now fetching the data from the database
+  const fetchUserDetails = async (uid) => {
+    const userDetails = await getUserFromDatabase(uid);
+    setUserDetails(userDetails);
+  };
+
+  //Once the homepage loads applying the useEffect on the loginAuthenticated by adding the listener to check signup/login completion
+  useEffect(() => {
+    const listener = auth.onAuthStateChanged(user => {
+      // If no user is signed up then simply return
+      if (!user) return;
+
+      setLoginAuthenticated(true);
+      fetchUserDetails(user.uid);
+    });
+    return () => listener();
+  }, []);
+
+
   return (
     <div className="App">
       <Router>
