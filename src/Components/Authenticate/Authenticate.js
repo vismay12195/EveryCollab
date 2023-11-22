@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "../../../src/Components/Authenticate/Authenticate.module.css"
 import InputControl from "../InputControl/InputControl";
 import { Link } from "react-router-dom";
@@ -8,6 +8,16 @@ function Authenticate(props) {
 
     // Taking the decision from the signup state, if it is true then signup otherwise simply login
     const checkSignUp = props.signup ? true : false;
+
+    // In order to store the data of signup fields creating the state
+    const [signupValues, setSignupValues] = useState({
+        name: "",
+        email: "",
+        password: ""
+    });
+
+    //If there is any error then setting a state for those errors
+    const [errorMsg, setErrorMsg] = useState("");
     return (
         <div className={styles.container}>
             <form className={styles.form}>
@@ -18,13 +28,13 @@ function Authenticate(props) {
                 {/* Checking for the error or empty name field */}
 
                 {
-                    checkSignUp &&
-                    <InputControl label={"Name"} placeholder="Enter your name" />
+                    checkSignUp && (
+                        <InputControl label={"Name"} placeholder="Enter your name" onChange={(event) => setSignupValues((prev) => ({ ...prev, name: event.target.value }))} />
 
-                }
-                <InputControl label={"Email"} placeholder="test@email.com" />
-                <InputControl label={"Password"} placeholder="8-16 characters long" isPassword />
-                <p className={styles.error}>Something is missing!</p>
+                    )}
+                <InputControl label={"Email"} placeholder="test@email.com" onChange={(event) => setSignupValues((prev) => ({ ...prev, email: event.target.value }))} />
+                <InputControl label={"Password"} placeholder="8-16 characters long" onChange={(event) => setSignupValues((prev) => ({ ...prev, password: event.target.value }))} isPassword />
+                <p className={styles.error}>{errorMsg}</p>
 
                 <button>{checkSignUp ? "Sign Up" : "Login"}</button>
 
