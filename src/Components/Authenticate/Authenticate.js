@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "../../../src/Components/Authenticate/Authenticate.module.css"
 import InputControl from "../InputControl/InputControl";
 import { Link, useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth, updateUserDatabase } from "../../firebase";
 
 // This component is used to authenticate whether the user needs to signup or login and then redirect to that particular part of the form
@@ -27,8 +27,25 @@ function Authenticate(props) {
 
     // Creating a function to handle the login data upon formSubmission
     const formLogin = () => {
+        if (!signupValues.email || !signupValues.password) {
+            setErrorMsg("All fields required");
+            return;
+        }
 
-    }
+        setSubmitDisabledButton(true);
+
+        //In login, only need to verify the email and password but there is nothing that needs to be stored to database
+        signInWithEmailAndPassword(auth, signupValues.email, signupValues.password)
+            .then(async () => {
+                // const userId = response.user.uid;
+                setSubmitDisabledButton(false);
+                navigateTo('/');
+            })
+            .catch((err) => {
+                setSubmitDisabledButton(false);
+                setErrorMsg(err.message);
+            });
+    };
 
     // Creating a function to handle the signup data upon formSubmission
     const formSignup = () => {
