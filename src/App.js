@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 import Home from './Components/Home';
 import Authenticate from './Components/Authenticate/Authenticate';
@@ -36,10 +36,21 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path='/login' element={<Authenticate />} />
-          <Route path='/signup' element={<Authenticate signup />} />
+
+          {/* Adding the decision making condition to block the route to sign up and login page once the user has logged in */}
+          {
+            !loginAuthenticated && (
+              <>
+                <Route path='/login' element={<Authenticate />} />
+                <Route path='/signup' element={<Authenticate signup />} />
+              </>
+            )
+          }
+
           <Route path='/account' element={<h1>Account</h1>} />
-          <Route path='/' element={<Home />} />
+          {/* Once the user log in then it should be using the auth as props as defined in the Home.js component */}
+          <Route path='/' element={<Home auth={loginAuthenticated} />} />
+          <Route path='/*' element={<Navigate to="/" />} />
         </Routes>
       </Router>
     </div>
