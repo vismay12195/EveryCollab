@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import styles from "../../../src/Components/Authenticate/Authenticate.module.css"
 import InputControl from "../InputControl/InputControl";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth, updateUserDatabase } from "../../firebase";
 
 // This component is used to authenticate whether the user needs to signup or login and then redirect to that particular part of the form
 function Authenticate(props) {
 
     // Taking the decision from the signup state, if it is true then signup otherwise simply login
     const checkSignUp = props.signup ? true : false;
+    const navigateTo = useNavigate();
 
     // In order to store the data of signup fields creating the state
     const [signupValues, setSignupValues] = useState({
@@ -42,11 +43,14 @@ function Authenticate(props) {
         //Importing the auth class function of creating the user with its email and password which itself is a promise,
         // This promise won't work until the Authenticate from Firebase for Email and Password is enabled
         createUserWithEmailAndPassword(auth, signupValues.email, signupValues.password)
-            .then((response) => {
-                setSubmitDisabledButton(false);
+            .then(async (response) => {
                 // To get the details from the user.uid of Firebase database
                 const userId = response.user.uid;
-                console.log(response);
+                await updateUserDatabase({ name: signupValues.name, email: signupValues.email }, userId);
+                // Once the database is stored to Firestore then preventing the button to be pressed multiple times
+                setSubmitDisabledButton(false);
+                // After signing up returning to the homepage
+                navigateTo('/');
             })
             .catch((err) => {
                 setSubmitDisabledButton(false);

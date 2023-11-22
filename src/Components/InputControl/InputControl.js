@@ -8,7 +8,7 @@ import { Eye, EyeOff } from "react-feather";
 function InputControl({ label, isPassword, ...props }) {
 
     // Creating the Password field state when to show and when not to show
-    const [isVisible, setIsVisible] = useState(true);
+    const [isVisible, setIsVisible] = useState(false);
 
     return (
         <div className={styles.container}>
