@@ -55,6 +55,11 @@
     background-color: #FF7E67;
 }
 
+/* Style for disabled button upon submission of form */
+.form button:disabled {
+    background-color: #FAFAFA;
+}
+
 /* Error message styling */
 
 .form .error {
