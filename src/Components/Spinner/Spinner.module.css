@@ -1,0 +1,17 @@
+.spinner {
+    width: 6rem;
+    height: 6rem;
+    border: 10px solid;
+    border-color: #A2D5F2 #FF7E67 #A2D5F2 #07689F;
+    background-color: transparent;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    animation: spinner 2s ease infinite;
+}
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}

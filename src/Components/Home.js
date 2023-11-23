@@ -10,6 +10,7 @@ const Home = (props) => {
     const loginAuthenticated = props.auth ? true : false;
 
     const redirectOnClick = () => {
+        //Blocking the routing to the signup or login page once the user is being authenticated
         if (loginAuthenticated) navigateTo('/account');
 
         else navigateTo('/login');
