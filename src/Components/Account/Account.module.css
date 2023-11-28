@@ -59,6 +59,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .section .profile .image {
@@ -98,6 +100,14 @@
     height: 22px;
     width: 22px;
     color: #07689F;
+}
+
+.section .left .progress {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #FF7E67;
+    display: flex;
+    justify-content: center;
 }
 
 .section .profile .right {
