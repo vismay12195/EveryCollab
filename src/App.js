@@ -6,6 +6,7 @@ import Home from './Components/Home';
 import Authenticate from './Components/Authenticate/Authenticate';
 import { auth, getUserFromDatabase } from './firebase';
 import Spinner from './Components/Spinner/Spinner';
+import Account from './Components/Account/Account';
 
 
 function App() {
@@ -28,10 +29,12 @@ function App() {
 
   //Once the homepage loads applying the useEffect on the loginAuthenticated by adding the listener to check signup/login completion
   useEffect(() => {
-    const listener = auth.onAuthStateChanged(user => {
+    const listener = auth.onAuthStateChanged((user) => {
       // If no user is signed up then simply return
       if (!user) {
         setIsDataLoaded(true);
+        // This is needed to be set to false because when there no user logged in it has to be brought back to false
+        setLoginAuthenticated(false);
         return;
       };
 
@@ -60,7 +63,8 @@ function App() {
                 )
               }
 
-              <Route path='/account' element={<h1>Account</h1>} />
+              {/* Account page will have to fetch the details from the userDetails and will redirect non authorizedd users to another page*/}
+              <Route path='/account' element={<Account userDetails={userDetails} auth={loginAuthenticated} />} />
               {/* Once the user log in then it should be using the auth as props as defined in the Home.js component */}
               <Route path='/' element={<Home auth={loginAuthenticated} />} />
               <Route path='/*' element={<Navigate to="/" />} />
