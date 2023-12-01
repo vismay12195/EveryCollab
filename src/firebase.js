@@ -35,7 +35,8 @@ const updateUserDatabase = async (user, uid) => {
     // setDoc is predefined in Firestore and it provides the document reference to the(db -> collection_name -> document_name) and fetches the data of user
     // setDoc is an async function
     const docRef = doc(db, "users", uid);
-    await setDoc(docRef, { ...user });
+    // Adding the uid as well inside the setDoc() in order to save User Details to database using uid
+    await setDoc(docRef, { ...user, uid });
 }
 
 // Function to get the user data from the database collection
