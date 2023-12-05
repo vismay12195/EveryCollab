@@ -155,3 +155,18 @@
 .saveButton:disabled {
     background-color: #FAFAFA !important;
 }
+
+/* Style for displaying the error message */
+.footer {
+    display: flex;
+    gap: 30px;
+}
+
+.footer .error {
+    flex: 1;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #FF1E00;
+    width: 100%;
+    text-align: center;
+}
