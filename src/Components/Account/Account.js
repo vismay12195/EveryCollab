@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from './Account.module.css';
-import { Camera, LogOut } from "react-feather";
+import { Camera, Edit2, GitHub, LogOut, Paperclip, Trash } from "react-feather";
 import InputControl from "../InputControl/InputControl";
 import { Navigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth, updateUserDatabase, uploadImage } from "../../firebase";
+import ProjectForm from "./ProjectForm/ProjectForm";
 
 
 const Account = (props) => {
@@ -20,7 +21,7 @@ const Account = (props) => {
     // Upon complete profile image upload url state
     const [profileImageURL, setProfileImageURL] = useState("https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png");
 
-    // Storing the User Profile Details upon the state change while fetching userDetails from firebase
+    // ------ Storing the User Profile Details upon the state change while fetching userDetails from firebase ------
     const [userProfileDetails, setUserProfileDetails] = useState({
         name: userDetails.name,
         designation: userDetails.designation || "",
@@ -33,6 +34,9 @@ const Account = (props) => {
     const [saveButtonDisabled, setSaveButtonDisabled] = useState(false);
     // Showing an error message if any information is wrong for the userProfile
     const [errorMessage, setErrorMessage] = useState("");
+
+    // ------ ProjectForm modal states and its functions upon clicking on the Add Projects button ------
+    const [showProjectForm, setShowProjectForm] = useState(false);
 
     // Logout function definition using the signOut functionality of Firestore
     const accountLogout = async () => {
@@ -104,6 +108,12 @@ const Account = (props) => {
         <>
             <div className={styles.container}>
 
+                {/* Conditional rendering of the ProjectForm modal */}
+                {
+                    showProjectForm &&
+                    <ProjectForm onClose={() => setShowProjectForm(false)} />
+
+                }
                 {/* -------------- # Header Part -------------- */}
                 <div className={styles.header}>
 
@@ -171,6 +181,36 @@ const Account = (props) => {
                                 }
                             </div>
 
+                        </div>
+                    </div>
+                </div>
+
+                {/* Adding the Projects section */}
+                <div className={styles.section}>
+                    <div className={styles.projectsHeader}>
+                        <div className={styles.title}>Your Projects</div>
+                        <button className={styles.addProjectsButton} onClick={() => setShowProjectForm(true)}>Add Projects</button>
+                    </div>
+
+                    <div className={styles.projects}>
+                        <div className={styles.project}>
+                            <p className={styles.title}>E-commerce Store</p>
+                            <div className={styles.links}>
+                                <Edit2 />
+                                <Trash />
+                                <GitHub />
+                                <Paperclip />
+                            </div>
+                        </div>
+
+                        <div className={styles.project}>
+                            <p className={styles.title}>Chat App</p>
+                            <div className={styles.links}>
+                                <Edit2 />
+                                <Trash />
+                                <GitHub />
+                                <Paperclip />
+                            </div>
                         </div>
                     </div>
                 </div>
