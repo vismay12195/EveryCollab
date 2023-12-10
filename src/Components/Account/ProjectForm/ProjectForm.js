@@ -1,9 +1,11 @@
 import styles from './ProjectForm.module.css';
+import { X } from 'react-feather';
+
 import Modal from '../../Modal/Modal';
 import InputControl from '../../InputControl/InputControl';
 import { useRef, useState } from 'react';
-import { X } from 'react-feather';
-import { uploadImage } from '../../../firebase';
+
+import { addProjectInDatabase, uploadImage, refUser } from '../../../firebase';
 
 const ProjectForm = (props) => {
     //Adding reference to the image file
@@ -11,18 +13,19 @@ const ProjectForm = (props) => {
 
     // All the ProjectForm values would be updated
     const [values, setValues] = useState({
-        thumbnail: "https://www.agora-gallery.com/advice/wp-content/uploads/2015/10/image-placeholder-300x200.png",
-        github: "",
-        link: "",
-        title: "",
-        overview: "",
-        points: ["", ""]
+        thumbnail: "" || null,
+        github: "" || null,
+        link: "" || null,
+        title: "" || null,
+        overview: "" || null,
+        points: ["", ""] || null
     });
 
     // States needed for the handleFileInputChange
     const [errorMessage, setErrorMessage] = useState("");
     const [imageUploadStarted, setImageUploadStarted] = useState(false);
     const [imageUploadProgress, setImageUploadProgress] = useState(0);
+    const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
 
     //Adding the functionality to change the file of Thumbnail
     const handleFileInputChange = (event) => {
@@ -92,14 +95,21 @@ const ProjectForm = (props) => {
         } else if (actualPoints.length < 2) {
             isValid = false;
             setErrorMessage("Project description of at least 2 lines required");
+        } else {
+            setErrorMessage("");
         }
 
         return isValid;
     }
 
 
-    const handleSubmission = () => {
+    const handleSubmission = async () => {
         if (!validateForm()) return;
+
+        setSubmitButtonDisabled(true);
+        await addProjectInDatabase({ ...values, refUser: props.uid });
+        setSubmitButtonDisabled(false);
+        if (props.onClose) props.onClose();
     }
 
     return (
@@ -116,7 +126,7 @@ const ProjectForm = (props) => {
                     <div className={styles.left}>
                         <div className={styles.image}>
                             <img
-                                src={values.thumbnail}
+                                src={values.thumbnail || "https://www.agora-gallery.com/advice/wp-content/uploads/2015/10/image-placeholder-300x200.png"}
                                 alt='Thumbnail'
                                 onClick={() => fileInputRef.current.click()}></img>
                             <p><span>{imageUploadProgress.toFixed(2)}%</span> loaded</p>
@@ -179,7 +189,11 @@ const ProjectForm = (props) => {
                 <div className={styles.footer}>
                     {/* Adding the Cancel functionality using the onClose */}
                     <p className={styles.cancel} onClick={() => (props.onClose ? props.onClose() : "")}>Cancel</p>
-                    <button className={styles.submitButton} onClick={handleSubmission}>Submit</button>
+                    <button
+                        className={styles.submitButton}
+                        onClick={handleSubmission}
+                        disabled={submitButtonDisabled}>Submit
+                    </button>
                 </div>
             </div>
         </Modal>

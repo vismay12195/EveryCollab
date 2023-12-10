@@ -4,7 +4,7 @@ import { Camera, Edit2, GitHub, LogOut, Paperclip, Trash } from "react-feather";
 import InputControl from "../InputControl/InputControl";
 import { Navigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { auth, updateUserDatabase, uploadImage } from "../../firebase";
+import { auth, getAllProjectsForUser, updateUserDatabase, uploadImage } from "../../firebase";
 import ProjectForm from "./ProjectForm/ProjectForm";
 
 
@@ -38,6 +38,10 @@ const Account = (props) => {
     // ------ ProjectForm modal states and its functions upon clicking on the Add Projects button ------
     const [showProjectForm, setShowProjectForm] = useState(false);
 
+    // Adding the Projects on the Accounts Page from the Firebase
+    const [projectsLoaded, setProjectsLoaded] = useState(false);
+    const [projects, setProjects] = useState([]);
+
     // Logout function definition using the signOut functionality of Firestore
     const accountLogout = async () => {
         await signOut(auth);
@@ -67,7 +71,7 @@ const Account = (props) => {
             },
             (err) => {
                 console.log('Error ->', err);
-                setProfileImageUploadStarted(false);
+                setProfileImageUploadStarted(true);
             }
         );
 
@@ -82,7 +86,7 @@ const Account = (props) => {
                 ...prev,
                 [property]: event.target.value,
             }));
-    }
+    };
 
     // Storing the User Profile Details to Database
     const saveUserDetailsToDatabase = async () => {
@@ -99,9 +103,27 @@ const Account = (props) => {
     }
 
     // Sending the User profile images to database too
-    const saveUserImageToDatabase = async (url) => {
-        await updateUserDatabase({ ...userProfileDetails, profileImage: url }, userDetails.uid);
+    const saveUserImageToDatabase = (url) => {
+        updateUserDatabase({ ...userProfileDetails, profileImage: url }, userDetails.uid);
+    };
+
+    // Fetching all projects from the firebase
+    const fetchAllProjects = async () => {
+        const result = await getAllProjectsForUser(userDetails.uid);
+        if (!result) {
+            setProjectsLoaded(true);
+            return;
+        }
+        setProjectsLoaded(true);
+
+        let tempProjects = [];
+        result.forEach((doc) => tempProjects.push(doc.data()));
+        setProjects(tempProjects);
     }
+
+    useEffect(() => {
+        fetchAllProjects()
+    }, []);
 
     // Account verification would be implemented first
     return loginAuthenticated ? (
@@ -111,7 +133,7 @@ const Account = (props) => {
                 {/* Conditional rendering of the ProjectForm modal */}
                 {
                     showProjectForm &&
-                    <ProjectForm onClose={() => setShowProjectForm(false)} />
+                    <ProjectForm onClose={() => setShowProjectForm(false)} uid={userDetails.uid} />
 
                 }
                 {/* -------------- # Header Part -------------- */}
