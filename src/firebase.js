@@ -1,8 +1,7 @@
 // Import the functions of Firebase SDK
-import { getValue } from "@testing-library/user-event/dist/utils";
 import { initializeApp } from "firebase/app";
 import { getAuth } from 'firebase/auth';
-import { collection, doc, getDoc, getFirestore, setDoc, addDoc, getDocs, query, where } from 'firebase/firestore';
+import { collection, doc, getDoc, getFirestore, setDoc, addDoc, getDocs, query, where, deleteDoc } from 'firebase/firestore';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 
 const firebaseConfig = {
@@ -135,5 +134,23 @@ const getAllProjectsForUser = async (uid) => {
     return await getDocs(dbQuery);
 }
 
+// Functionality to delete user Projects
+const deleteProject = async (pid) => {
+    const docRef = doc(db, "projects", pid);
+    await deleteDoc(docRef);
+}
 
-export { app as default, auth, db, updateUserDatabase, getUserFromDatabase, uploadImage, addProjectInDatabase, updateProjectInDatabase, getAllProjects, getAllProjectsForUser };
+
+export {
+    app as default,
+    auth,
+    db,
+    updateUserDatabase,
+    getUserFromDatabase,
+    uploadImage,
+    addProjectInDatabase,
+    updateProjectInDatabase,
+    getAllProjects,
+    getAllProjectsForUser,
+    deleteProject
+};

@@ -136,3 +136,7 @@
 .footer .submitButton:hover {
     background-color: #FF7E67;
 }
+
+.footer .submitButton:disabled {
+    background-color: #FAFAFA !important;
+}

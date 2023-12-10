@@ -5,20 +5,25 @@ import Modal from '../../Modal/Modal';
 import InputControl from '../../InputControl/InputControl';
 import { useRef, useState } from 'react';
 
-import { addProjectInDatabase, uploadImage, refUser } from '../../../firebase';
+import { addProjectInDatabase, uploadImage, refUser, updateProjectInDatabase } from '../../../firebase';
 
 const ProjectForm = (props) => {
     //Adding reference to the image file
     const fileInputRef = useRef();
+    // Whether project needs to be edited or not
+    const isEdit = props.isEdit ? true : false;
+    // Project default values 
+    const defaults = props.default;
 
     // All the ProjectForm values would be updated
     const [values, setValues] = useState({
-        thumbnail: "" || null,
-        github: "" || null,
-        link: "" || null,
-        title: "" || null,
-        overview: "" || null,
-        points: ["", ""] || null
+        // Default values of each project of any user would be shown every single time user logs in
+        thumbnail: defaults?.thumbnail || "",
+        github: defaults?.github || "",
+        link: defaults?.link || "",
+        title: defaults?.title || "",
+        overview: defaults?.overview || "",
+        points: defaults?.points || ["", ""]
     });
 
     // States needed for the handleFileInputChange
@@ -107,8 +112,12 @@ const ProjectForm = (props) => {
         if (!validateForm()) return;
 
         setSubmitButtonDisabled(true);
-        await addProjectInDatabase({ ...values, refUser: props.uid });
+        // Condition for Editing the project
+        if (isEdit) await updateProjectInDatabase({ ...values, refUser: props.uid }, defaults.pid);
+        else await addProjectInDatabase({ ...values, refUser: props.uid });
         setSubmitButtonDisabled(false);
+        // Newly Added Projects will be added without the refresh of page using onSubmission
+        if (props.onSubmission) props.onSubmission();
         if (props.onClose) props.onClose();
     }
 
@@ -167,7 +176,7 @@ const ProjectForm = (props) => {
                                 {/* Add Points values are rendered based on its index in the array using the map */}
                                 {
                                     values.points.map((item, index) =>
-                                        <div className={styles.input}>
+                                        <div className={styles.input} key={index}>
                                             <InputControl
                                                 key={index}
                                                 placeholder="Project description..."
