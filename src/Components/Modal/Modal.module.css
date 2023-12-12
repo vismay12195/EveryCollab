@@ -1,0 +1,19 @@
+.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100vh;
+    height: fit-content;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.64);
+    z-index: 100;
+}
+
+.inner {
+    background-color: #FAFAFA;
+    border-radius: 5px;
+}

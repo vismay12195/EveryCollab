@@ -82,7 +82,7 @@
     position: absolute;
     right: 5px;
     top: 5px;
-    z-index: 999;
+    z-index: 50;
     color: #07689F;
     padding: 8px;
     border-radius: 50%;
@@ -100,6 +100,10 @@
     height: 22px;
     width: 22px;
     color: #07689F;
+}
+
+.section .camera svg:hover {
+    color: #FF7E67;
 }
 
 .section .left .progress {
@@ -169,4 +173,73 @@
     color: #FF1E00;
     width: 100%;
     text-align: center;
+}
+
+/* Style for the Projects Section */
+.projectsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.projectsHeader .addProjectsButton {
+    border: none;
+    outline: none;
+    color: #FAFAFA;
+    border-radius: 5px;
+    background-color: #07689F;
+    padding: 10px 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: 200ms;
+    width: fit-content;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.projectsHeader .addProjectsButton:hover {
+    background-color: #FF7E67;
+}
+
+.projects {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.projects .project {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+.project .title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.project .links {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+.project .links svg {
+    height: 22px;
+    width: 22px;
+    color: rgb(59, 59, 59);
+    transition: 200ms;
+    cursor: pointer;
+}
+
+.project .links svg:hover {
+    color: #FF7E67;
 }

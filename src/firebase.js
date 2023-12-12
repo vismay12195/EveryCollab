@@ -1,7 +1,7 @@
 // Import the functions of Firebase SDK
 import { initializeApp } from "firebase/app";
 import { getAuth } from 'firebase/auth';
-import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getFirestore, setDoc, addDoc, getDocs, query, where, deleteDoc } from 'firebase/firestore';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 
 const firebaseConfig = {
@@ -26,6 +26,8 @@ const db = getFirestore(app);
 
 // Creating an object to store the user profile pic to the Firebase's storage
 const storage = getStorage(app);
+
+// ====================== Users Database ===========================
 
 //Function to add the users data to the database collection, uid is coming from the promise values user -> uid
 const updateUserDatabase = async (user, uid) => {
@@ -101,5 +103,54 @@ const uploadImage = (file, progressCallback, urlCallback, errorCallback) => {
     });
 };
 
+// ====================== Projects Database ===========================
 
-export { app as default, auth, db, updateUserDatabase, getUserFromDatabase, uploadImage };
+const addProjectInDatabase = async (project) => {
+    if (typeof project !== "object") return;
+
+    // projects it will be added to the collection by generating its reference
+    const collectionRef = collection(db, "projects");
+    await addDoc(collectionRef, { ...project });
+};
+
+const updateProjectInDatabase = async (project, pid) => {
+    if (typeof project !== "object") return;
+
+    const docRef = doc(db, "projects", pid);
+    await setDoc(docRef, { ...project });
+}
+
+// To return all the project data
+const getAllProjects = async () => {
+    await getDocs(collection(db, "projects"));
+}
+
+const getAllProjectsForUser = async (uid) => {
+    if (!uid) return;
+    const collectionRef = collection(db, "projects");
+    const condition = where("refUser", "==", uid);
+    const dbQuery = query(collectionRef, condition);
+
+    return await getDocs(dbQuery);
+}
+
+// Functionality to delete user Projects
+const deleteProject = async (pid) => {
+    const docRef = doc(db, "projects", pid);
+    await deleteDoc(docRef);
+}
+
+
+export {
+    app as default,
+    auth,
+    db,
+    updateUserDatabase,
+    getUserFromDatabase,
+    uploadImage,
+    addProjectInDatabase,
+    updateProjectInDatabase,
+    getAllProjects,
+    getAllProjectsForUser,
+    deleteProject
+};

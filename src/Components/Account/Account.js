@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from './Account.module.css';
-import { Camera, LogOut } from "react-feather";
+import { Camera, Edit2, GitHub, LogOut, Paperclip, Trash } from "react-feather";
 import InputControl from "../InputControl/InputControl";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { auth, updateUserDatabase, uploadImage } from "../../firebase";
+import { auth, deleteProject, getAllProjectsForUser, updateUserDatabase, uploadImage } from "../../firebase";
+import ProjectForm from "./ProjectForm/ProjectForm";
+
+import Spinner from "../Spinner/Spinner"
 
 
 const Account = (props) => {
@@ -18,9 +21,9 @@ const Account = (props) => {
     // Showing the profile image upload started or not for smaller profile image size
     const [profileImageUploadStarted, setProfileImageUploadStarted] = useState(false);
     // Upon complete profile image upload url state
-    const [profileImageURL, setProfileImageURL] = useState("https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png");
+    const [profileImageURL, setProfileImageURL] = useState(userDetails.profileImage || "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png");
 
-    // Storing the User Profile Details upon the state change while fetching userDetails from firebase
+    // ------ Storing the User Profile Details upon the state change while fetching userDetails from firebase ------
     const [userProfileDetails, setUserProfileDetails] = useState({
         name: userDetails.name,
         designation: userDetails.designation || "",
@@ -33,6 +36,18 @@ const Account = (props) => {
     const [saveButtonDisabled, setSaveButtonDisabled] = useState(false);
     // Showing an error message if any information is wrong for the userProfile
     const [errorMessage, setErrorMessage] = useState("");
+
+    // ------ ProjectForm modal states and its functions upon clicking on the Add Projects button ------
+    const [showProjectForm, setShowProjectForm] = useState(false);
+
+    // Adding the Projects on the Accounts Page from the Firebase
+    const [projectsLoaded, setProjectsLoaded] = useState(false);
+    const [projects, setProjects] = useState([]);
+
+    // Adding the state for Edit button functionality
+    const [isEditProjectModal, setIsEditProjectModal] = useState(false);
+    // Adding the state of Edit on which Project we want to make changes to already saved details
+    const [editProject, setIsEditProject] = useState({});
 
     // Logout function definition using the signOut functionality of Firestore
     const accountLogout = async () => {
@@ -63,7 +78,7 @@ const Account = (props) => {
             },
             (err) => {
                 console.log('Error ->', err);
-                setProfileImageUploadStarted(false);
+                setProfileImageUploadStarted(true);
             }
         );
 
@@ -78,7 +93,7 @@ const Account = (props) => {
                 ...prev,
                 [property]: event.target.value,
             }));
-    }
+    };
 
     // Storing the User Profile Details to Database
     const saveUserDetailsToDatabase = async () => {
@@ -95,8 +110,41 @@ const Account = (props) => {
     }
 
     // Sending the User profile images to database too
-    const saveUserImageToDatabase = async (url) => {
-        await updateUserDatabase({ ...userProfileDetails, profileImage: url }, userDetails.uid);
+    const saveUserImageToDatabase = (url) => {
+        updateUserDatabase({ ...userProfileDetails, profileImage: url }, userDetails.uid);
+    };
+
+    // Fetching all projects from the firebase
+    const fetchAllProjects = async () => {
+        const result = await getAllProjectsForUser(userDetails.uid);
+        if (!result) {
+            setProjectsLoaded(true);
+            return;
+        }
+        setProjectsLoaded(true);
+
+        let tempProjects = [];
+
+        //Getting the Saved projects Data and Project id
+        result.forEach((doc) => tempProjects.push({ ...doc.data(), pid: doc.id }));
+        setProjects(tempProjects);
+    }
+
+    useEffect(() => {
+        fetchAllProjects()
+    }, []);
+
+    // Adding the Edit and Delete Icon functionality
+    const handleEditClick = (project) => {
+        // Opening the modal, showing the previously saved details of Project
+        setIsEditProjectModal(true);
+        setIsEditProject(project);
+        setShowProjectForm(true);
+    }
+
+    const handleDeleteClick = async (pid) => {
+        await deleteProject(pid);
+        fetchAllProjects();
     }
 
     // Account verification would be implemented first
@@ -104,6 +152,17 @@ const Account = (props) => {
         <>
             <div className={styles.container}>
 
+                {/* Conditional rendering of the ProjectForm modal */}
+                {
+                    showProjectForm &&
+                    <ProjectForm
+                        onSubmission={fetchAllProjects}
+                        onClose={() => setShowProjectForm(false)}
+                        uid={userDetails.uid}
+                        isEdit={isEditProjectModal}
+                        default={editProject} />
+
+                }
                 {/* -------------- # Header Part -------------- */}
                 <div className={styles.header}>
 
@@ -172,6 +231,48 @@ const Account = (props) => {
                             </div>
 
                         </div>
+                    </div>
+                </div>
+
+                {/* Adding the Projects section */}
+                <div className={styles.section}>
+                    <div className={styles.projectsHeader}>
+                        <div className={styles.title}>Your Projects</div>
+                        <button className={styles.addProjectsButton} onClick={() => setShowProjectForm(true)}>Add Projects</button>
+                    </div>
+
+                    {/* Projects will be fetched from the Firestore Database for each User */}
+                    <div className={styles.projects}>
+                        {
+                            projectsLoaded ?
+                                (projects.length > 0 ?
+                                    (projects.map((item, index) => (
+                                        <div className={styles.project}
+                                            key={item.title + index}
+                                        >
+                                            <p className={styles.title}>{item.title}</p>
+                                            <div className={styles.links}>
+                                                {/* Passing the details of whole project to ProjectForm upon clicking Edit icon */}
+                                                <Edit2 onClick={() => handleEditClick(item)} />
+                                                <Trash onClick={() => handleDeleteClick(item.pid)} />
+                                                {/* Project will be redirected to the Github project link */}
+                                                <Link target="_blank" to={`//${item.github}`}>
+                                                    <GitHub />
+                                                </Link>
+                                                {
+                                                    item.link ? (
+                                                        <Link target="_blank" to={`//${item.link}`}>
+                                                            <Paperclip />
+                                                        </Link >
+                                                    ) : (""
+                                                    )}
+                                            </div>
+                                        </div>
+                                    ))
+                                    ) :
+                                    (<p>No Projects found!"</p>)
+                                ) : (<Spinner />)
+                        }
                     </div>
                 </div>
             </div>
