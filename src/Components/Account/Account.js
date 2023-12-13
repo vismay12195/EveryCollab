@@ -21,7 +21,7 @@ const Account = (props) => {
     // Showing the profile image upload started or not for smaller profile image size
     const [profileImageUploadStarted, setProfileImageUploadStarted] = useState(false);
     // Upon complete profile image upload url state
-    const [profileImageURL, setProfileImageURL] = useState(userDetails.profileImage || "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png");
+    const [profileImageURL, setProfileImageURL] = useState("https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png");
 
     // ------ Storing the User Profile Details upon the state change while fetching userDetails from firebase ------
     const [userProfileDetails, setUserProfileDetails] = useState({

@@ -41,6 +41,7 @@ const updateUserDatabase = async (user, uid) => {
     await setDoc(docRef, { ...user, uid });
 }
 
+
 // Function to get the user data from the database collection
 const getUserFromDatabase = async (uid) => {
     const docRef = doc(db, "users", uid);
@@ -122,7 +123,7 @@ const updateProjectInDatabase = async (project, pid) => {
 
 // To return all the project data
 const getAllProjects = async () => {
-    await getDocs(collection(db, "projects"));
+    return await getDocs(collection(db, "projects"));
 }
 
 const getAllProjectsForUser = async (uid) => {

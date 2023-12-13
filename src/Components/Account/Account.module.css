@@ -31,7 +31,7 @@
 }
 
 .header .logout:hover {
-    color: #07689F;
+    color: #FAFAFA;
     font-weight: bold;
 }
 
@@ -242,4 +242,27 @@
 
 .project .links svg:hover {
     color: #FF7E67;
+}
+
+/* Adding responsive behaviour */
+@media screen and (max-width: 576px) {
+    .header .heading {
+        font-size: 1.2rem;
+    }
+
+    .section .profile .image {
+        width: 175px;
+        height: 175px;
+    }
+
+    .section .profile .right {
+        width: 100%;
+        gap: 10px;
+    }
+
+    .section .profile .right .row {
+        align-items: center;
+        flex-direction: column;
+        gap: 5px;
+    }
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
-import Home from './Components/Home';
+import Home from './Components/Home/Home';
 import Authenticate from './Components/Authenticate/Authenticate';
 import { auth, getUserFromDatabase } from './firebase';
 import Spinner from './Components/Spinner/Spinner';
