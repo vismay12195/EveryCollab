@@ -82,7 +82,7 @@ Challenges included setting up Github integration, Firebase authentication, and 
 
 
 ## Get Involved
-- Explore the codebase to understand the project structure and functionalities.
+- Explore the codebase to understand the project structure and functionalities. Also click on the live website and login using username: tops@gmail.com and password: Tops@123. You can also create your accont and add your projects to get familiarized by performing CRUD operation to your projects. All the added projects will also be available to view on the Homepage(To see them, just scroll down).
 
 EveryCollab is created by myself under the supervision of my mentor Yagnank Sir @FRONTGEEK. Feel free to connect with me or follow me @vismay12195 on github.
 **Happy Collaborating! 🚀**
